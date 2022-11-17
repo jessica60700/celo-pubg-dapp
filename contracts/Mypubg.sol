@@ -40,8 +40,8 @@ contract Mypubg is ERC721, ERC721URIStorage, ERC721Burnable, Ownable {
 
     constructor() ERC721("Mypubg", "PP") {}
 
-    // mint NTF
-    function mintCard(string memory uri, uint _price) public {
+    // mint NFT
+    function mintCard(string calldata uri, uint _price) public {
         require(_price >= 1 ether, "price too low");
         uint256 tokenId = _tokenIdCounter.current();
         _tokenIdCounter.increment();
@@ -64,6 +64,24 @@ contract Mypubg is ERC721, ERC721URIStorage, ERC721Burnable, Ownable {
         _transfer(address(this), msg.sender, tokenId);
         (bool transfer, ) = payable(owner).call{value: msg.value}("");
         require(transfer, "Transfer failed");
+    }
+
+// Gift a user a card
+    function giftCard(
+        address from,
+        address to,
+        uint256 tokenId
+    ) public onlyCardOwner(tokenId) {
+        _transfer(from, to, tokenId);
+        cards[tokenId].owner = payable(to);
+    }
+
+// Edit price of an NFT
+    function editPrice(uint tokenId, uint _price)
+        public
+        onlyCardOwner(tokenId)
+    {
+        cards[tokenId].price = _price;
     }
 
     // sell a NFT
@@ -98,6 +116,7 @@ contract Mypubg is ERC721, ERC721URIStorage, ERC721Burnable, Ownable {
         _transfer(address(this), msg.sender, tokenId);
     }
 
+    //  get List of NFTs
     function getCards() public view returns (Card[] memory) {
         uint amountCards = _tokenIdCounter.current();
         Card[] memory allCards = new Card[](amountCards);
