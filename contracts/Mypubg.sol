@@ -55,7 +55,7 @@ contract Mypubg is ERC721, ERC721URIStorage, ERC721Burnable, Ownable {
     }
 
     // buy a NFT
-    function buyCard(uint tokenId) external payable onlyOnSale(tokenId) {
+    function buyCard(uint256 tokenId) external payable onlyOnSale(tokenId) {
         require(cards[tokenId].owner != msg.sender, "card owner can't buy");
         require(msg.value == cards[tokenId].price, "Amount sent too low");
         address owner = cards[tokenId].owner;
@@ -77,7 +77,7 @@ contract Mypubg is ERC721, ERC721URIStorage, ERC721Burnable, Ownable {
     }
 
 // Edit price of an NFT
-    function editPrice(uint tokenId, uint _price)
+    function editPrice(uint256 tokenId, uint256 _price)
         public
         onlyCardOwner(tokenId)
     {
@@ -85,7 +85,7 @@ contract Mypubg is ERC721, ERC721URIStorage, ERC721Burnable, Ownable {
     }
 
     // sell a NFT
-    function sellCard(uint tokenId, uint _price)
+    function sellCard(uint256 tokenId, uint256 _price)
         public
         onlyCardOwner(tokenId)
         onlyNotOnSale(tokenId)
@@ -96,7 +96,7 @@ contract Mypubg is ERC721, ERC721URIStorage, ERC721Burnable, Ownable {
     }
 
     // delete a NFT
-    function deleteCard(uint tokenId)
+    function deleteCard(uint256 tokenId)
         public
         onlyCardOwner(tokenId)
         onlyNotOnSale(tokenId)
@@ -107,7 +107,7 @@ contract Mypubg is ERC721, ERC721URIStorage, ERC721Burnable, Ownable {
     }
 
     // unlist a NFT
-    function unlistCard(uint tokenId)
+    function unlistCard(uint256 tokenId)
         public
         onlyCardOwner(tokenId)
         onlyOnSale(tokenId)
