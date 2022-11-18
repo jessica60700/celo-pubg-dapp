@@ -8,3 +8,7 @@ This project uses the following tech stack:
 ) - A frontend library for interacting with the Celo blockchain.
 - [Hardhat](https://hardhat.org/) - A tool for writing and deploying smart contracts.
 - [Bootstrap](https://getbootstrap.com/) - A CSS framework that provides responsive, mobile-first layouts.
+
+## 2. DEMO LINK
+
+   https://statuesque-kleicha-00aaea.netlify.app/
