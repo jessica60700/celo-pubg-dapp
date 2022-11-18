@@ -40,8 +40,8 @@ contract Mypubg is ERC721, ERC721URIStorage, ERC721Burnable, Ownable {
 
     constructor() ERC721("Mypubg", "PP") {}
 
-    // mint NTF
-    function mintCard(string memory uri, uint _price) public {
+    // mint NFT
+    function mintCard(string calldata uri, uint _price) public {
         require(_price >= 1 ether, "price too low");
         uint256 tokenId = _tokenIdCounter.current();
         _tokenIdCounter.increment();
@@ -55,7 +55,7 @@ contract Mypubg is ERC721, ERC721URIStorage, ERC721Burnable, Ownable {
     }
 
     // buy a NFT
-    function buyCard(uint tokenId) external payable onlyOnSale(tokenId) {
+    function buyCard(uint256 tokenId) external payable onlyOnSale(tokenId) {
         require(cards[tokenId].owner != msg.sender, "card owner can't buy");
         require(msg.value == cards[tokenId].price, "Amount sent too low");
         address owner = cards[tokenId].owner;
@@ -66,8 +66,26 @@ contract Mypubg is ERC721, ERC721URIStorage, ERC721Burnable, Ownable {
         require(transfer, "Transfer failed");
     }
 
+// Gift a user a card
+    function giftCard(
+        address from,
+        address to,
+        uint256 tokenId
+    ) public onlyCardOwner(tokenId) {
+        _transfer(from, to, tokenId);
+        cards[tokenId].owner = payable(to);
+    }
+
+// Edit price of an NFT
+    function editPrice(uint256 tokenId, uint256 _price)
+        public
+        onlyCardOwner(tokenId)
+    {
+        cards[tokenId].price = _price;
+    }
+
     // sell a NFT
-    function sellCard(uint tokenId, uint _price)
+    function sellCard(uint256 tokenId, uint256 _price)
         public
         onlyCardOwner(tokenId)
         onlyNotOnSale(tokenId)
@@ -78,7 +96,7 @@ contract Mypubg is ERC721, ERC721URIStorage, ERC721Burnable, Ownable {
     }
 
     // delete a NFT
-    function deleteCard(uint tokenId)
+    function deleteCard(uint256 tokenId)
         public
         onlyCardOwner(tokenId)
         onlyNotOnSale(tokenId)
@@ -89,7 +107,7 @@ contract Mypubg is ERC721, ERC721URIStorage, ERC721Burnable, Ownable {
     }
 
     // unlist a NFT
-    function unlistCard(uint tokenId)
+    function unlistCard(uint256 tokenId)
         public
         onlyCardOwner(tokenId)
         onlyOnSale(tokenId)
@@ -98,6 +116,7 @@ contract Mypubg is ERC721, ERC721URIStorage, ERC721Burnable, Ownable {
         _transfer(address(this), msg.sender, tokenId);
     }
 
+    //  get List of NFTs
     function getCards() public view returns (Card[] memory) {
         uint amountCards = _tokenIdCounter.current();
         Card[] memory allCards = new Card[](amountCards);
